@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happyjob.study.car.dao.CarDao">
+
+    <select id="listFileupload" resultType="kr.happyjob.study.car.model.CarModel">
+            select tb.id
+           	     , tb.carnum
+                 , tb.model
+                 , tb.modelyear
+                 , tb.make
+                 , tb.price
+                  from tb_car tb
+              <where>
+			<if test="(searchvalue != null) and (!searchvalue.equals(''))">
+				<choose>
+					<when test="searchtype eq 'id'.toString()">
+						and tb.id LIKE CONCAT('%', #{searchvalue}, '%')
+					</when>
+					<when
+						test="searchtype eq 'carnum'.toString()">
+						and tb.carnum LIKE CONCAT('%', #{searchvalue}, '%')
+					</when>
+					<when
+						test="searchtype eq 'model'.toString()">
+						and tb.model LIKE CONCAT('%', #{searchvalue}, '%')
+					</when>
+					<when
+						test="searchtype eq 'modelyear'.toString()">
+						and tb.modelyear LIKE CONCAT('%', #{searchvalue}, '%')
+					</when>
+					<when
+						test="searchtype eq 'make'.toString()">
+						and tb.make LIKE CONCAT('%', #{searchvalue}, '%')
+					</when>
+					<when
+						test="searchtype eq 'price'.toString()">
+						and tb.price = #{searchvalue}
+					</when>
+					<otherwise>
+						AND (
+						              tb.id LIKE CONCAT('%', #{searchvalue}, '%')
+						          or tb.carnum LIKE CONCAT('%', #{searchvalue}, '%')
+						          or tb.model LIKE CONCAT('%', #{searchvalue}, '%')
+						          or tb.modelyear LIKE CONCAT('%', #{searchvalue}, '%')
+						          or tb.make LIKE CONCAT('%', #{searchvalue}, '%')
+						          or  tb.price = #{searchvalue}
+						        )
+						
+					</otherwise>
+				</choose>
+			</if>
+		</where> 
+		limit #{startnum},#{pagesize}
+    </select>
+    
+    <select id="searchlistcnt" resultType="int">
+            select count(*)
+            from tb_car tb
+                 <where>
+			<if test="(searchvalue != null) and (!searchvalue.equals(''))">
+				<choose>
+					<when
+						test="searchtype eq 'id'.toString()">
+						and tb.id LIKE CONCAT('%', #{searchvalue}, '%')
+					</when>
+					<when
+						test="searchtype eq 'carnum'.toString()">
+						and tb.carnum LIKE CONCAT('%', #{searchvalue}, '%')
+					</when>
+					<when
+						test="searchtype eq 'model'.toString()">
+						and tb.model LIKE CONCAT('%', #{searchvalue}, '%')
+					</when>
+					<when
+						test="searchtype eq 'modelyear'.toString()">
+						and tb.modelyear LIKE CONCAT('%', #{searchvalue}, '%')
+					</when>
+					<when
+						test="searchtype eq 'make'.toString()">
+						and tb.make LIKE CONCAT('%', #{searchvalue}, '%')
+					</when>
+					<when
+						test="searchtype eq 'price'.toString()">
+						and tb.price = #{searchvalue}
+					</when>
+					<otherwise>
+						AND (
+						              tb.id LIKE CONCAT('%', #{searchvalue}, '%')
+						          or tb.carnum LIKE CONCAT('%', #{searchvalue}, '%')
+						          or tb.model LIKE CONCAT('%', #{searchvalue}, '%')
+						          or tb.modelyear LIKE CONCAT('%', #{searchvalue}, '%')
+						          or tb.make LIKE CONCAT('%', #{searchvalue}, '%')
+						          or  tb.price = #{searchvalue}
+						        )
+						
+					</otherwise>
+				</choose>
+			</if>
+		</where> 
+    </select>
+
+   <select id="selectFileupload" resultType="kr.happyjob.study.car.model.CarModel">
+              select tb.id
+           	     , tb.carnum
+                 , tb.model
+                 , tb.modelyear
+                 , tb.make
+                 , tb.price
+                  from tb_car tb   
+         where tb.carnum = #{carnum}      
+    </select>
+    
+    <insert id="insertFileupload">
+         <selectKey resultType="int" keyProperty="nbd_no" order="BEFORE">
+            select ifnull(max(carnum),0) + 1 from tb_car 
+        </selectKey> 
+          insert into tb_car
+                        (
+                           id          
+                         , carnum   
+                         , model
+                         , modelyear  
+                         , make 
+                         , price  
+                        ) values (
+                           #{id} 
+                       	,#{carnum} 
+                         ,#{model} 
+                         ,#{modelyear} 
+                         ,#{make} 
+                         ,#{price} 
+                         )
+    </insert>
+    
+    <update id="updateFileupload">
+           update tb_car set 
+                           id = #{id}
+                         , carnum = #{carnum2} 
+                         , model = #{model}
+                         , modelyear = #{modelyear} 
+                         , make = #{make}
+                         , price = #{price} 
+          where carnum = #{carnum}  
+    </update>
+    
+     <delete id="deleteFileupload">
+          delete from tb_car
+          where carnum = #{carnum} 
+    </delete>   
+
+</mapper>
